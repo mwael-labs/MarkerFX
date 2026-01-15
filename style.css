@@ -20,6 +20,21 @@ sp-heading {
   color: var(--uxp-host-text-color-secondary, white);
 }
 
+label{
+  color: var(--uxp-host-text-color-secondary, white);
+  font-size: 1rem;
+}
+
+input{
+  max-width: 20px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 footer {
   display: flex;
   flex-wrap: wrap;

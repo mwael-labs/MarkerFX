@@ -14,41 +14,42 @@
 
 // Global object.
 const ppro = require("premierepro");
+const app = require("premierepro");
 
 // Call the Premiere Pro API to populate Application Info area.
-async function populateProjectInfo() {
-  // Get the active project.
-  const project = await ppro.Project.getActiveProject();
-  if (!project) {
-    log("There is no active project found", "red");
-  } else {
-    log(`Active project: ${project.name}`);
-    // Get the active sequence.
-    const sequence = await project.getActiveSequence();
-    if (!sequence) {
-      log("There is no active sequence found", "red");
-    } else {
-      log(`Active sequence: ${sequence.name}`);
-    }
-  }
-}
+// async function populateProjectInfo() {
+//   // Get the active project.
+//   const project = await ppro.Project.getActiveProject();
+//   if (!project) {
+//     log("There is no active project found", "red");
+//   } else {
+//     log(`Active project: ${project.name}`);
+//     // Get the active sequence.
+//     const sequence = await project.getActiveSequence();
+//     if (!sequence) {
+//       log("There is no active sequence found", "red");
+//     } else {
+//       log(`Active sequence: ${sequence.name}`);
+//     }
+//   }
+// }
 
 // Event listener for the Populate Application Info button.
-document
-  .querySelector("#btnPopulate")
-  .addEventListener("click", populateProjectInfo);
+// document
+//   .querySelector("#btnPopulate")
+//   .addEventListener("click", populateProjectInfo);
 
 // Event listener for the Clear Application Info button.
-document.querySelector("#clear-btn").addEventListener("click", () => {
-  document.getElementById("plugin-body").innerHTML = "";
-});
+// document.querySelector("#clear-btn").addEventListener("click", () => {
+//   document.getElementById("plugin-body").innerHTML = "";
+// });
 
 // Log function to display messages in the plugin body.
-function log(msg, color) {
-  document.getElementById("plugin-body").innerHTML += color
-    ? `<span style='color:${color}'>${msg}</span><br />`
-    : `${msg}<br />`;
-}
+// function log(msg, color) {
+//   document.getElementById("plugin-body").innerHTML += color
+//     ? `<span style='color:${color}'>${msg}</span><br />`
+//     : `${msg}<br />`;
+// }
 
 
 function updateTheme(theme) {
@@ -70,10 +71,9 @@ document.theme.onUpdated.addListener((theme) => {
 const currentTheme = document.theme.getCurrent();
 updateTheme(currentTheme);
 
-const app = require("premierepro");
 // let timeToInsert = document.getElementById("input").value;
 // Insert a specified item into the main timeline
-async function insertItem(time, item) {
+async function insertItem(time, item, videoInputTrack, audioInputTrack) {
     
     try {
         const project = await app.Project.getActiveProject();
@@ -96,14 +96,12 @@ async function insertItem(time, item) {
         // Create & Execute the Insertion Action
         project.lockedAccess(() => {
             project.executeTransaction ((compoundAction) => {
-                actInsertProjItem = seqEditor.createInsertProjectItemAction(itemToInsert, insertionTime, 0, 0, onlyShiftInputTrack);
+                actInsertProjItem = seqEditor.createInsertProjectItemAction(itemToInsert, insertionTime, videoInputTrack, audioInputTrack, onlyShiftInputTrack);
+                //                                                           projectItem, time  ,VtrackIndex, AtrackIndex, limitshift
                 compoundAction.addAction(actInsertProjItem);
             })
         });
         
-
-
-
     } catch (err) {
         console.error(err);
     }
@@ -118,15 +116,13 @@ async function getMarkers() {
   const sequenceMarkers = await ppro.Markers.getMarkers(mainSequence);
   // MARKERS
   const markers = await sequenceMarkers.getMarkers();
+  const videoInput = Number(document.getElementById("videoInput").value)
+  const audioInput = Number(document.getElementById("audioInput").value)
   for(let marker of markers){
-    await insertItem(marker.getStart().seconds, marker.getName());
-
-  }
-  console.log(markers[0].getName())
-  console.log(markers[0].getStart())
-
+    await insertItem(marker.getStart().seconds, marker.getName(), videoInput-1, audioInput-1);
   }
 
+  }
   catch(err){
     console.error(err)
   }
