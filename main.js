@@ -74,29 +74,88 @@ updateTheme(currentTheme);
 // let timeToInsert = document.getElementById("input").value;
 // Insert a specified item into the main timeline
 async function insertItem(time, item, videoInputTrack, audioInputTrack) {
-    
     try {
         const project = await app.Project.getActiveProject();
         const rootItem = await project.getRootItem();
         const items = await rootItem.getItems();
+  
+        let actual_item;
+        actual_item = item
+
         const mainSequence = await project.getActiveSequence();
         const seqEditor = await app.SequenceEditor.getEditor(mainSequence);
         const insertionTime = await app.TickTime.createWithSeconds(Number(time));
         const onlyShiftInputTrack = true; // False = split & shift ALL tracks at insertion point
         var itemToInsert;
 
+
         // Specify item to insert
+        let availableItems = []
         for (i=0; i<items.length; i++) {
             if (items[i].name == item) {
-                itemToInsert = items[i];
-                break;
+              availableItems.push(items[i])
+              //itemToInsert = items[i];
+              //break;
             }
         }
+        const random = Math.floor(Math.random() * availableItems.length);
+        console.log(random)
+        console.log(availableItems)
+        itemToInsert = availableItems[random]
 
-        // Create & Execute the Insertion Action
+        let has_collisions = false
+
+        do {
+          has_collisions = false; // reset
+          // Get audio track from the sequence
+          const audioTrack = await mainSequence.getAudioTrack(audioInputTrack);
+          // Get track items
+          const audioTrackItems = await audioTrack.getTrackItems(
+              app.Constants.TrackItemType.CLIP,
+              false
+          );
+          console.log(`Audio track ${audioInputTrack} has ${audioTrackItems.length} items`);
+          for (let trackItem of audioTrackItems) {
+              const itemStart = await trackItem.getStartTime();
+              const itemEnd = await trackItem.getEndTime();
+              if (time >= itemStart.seconds && time < itemEnd.seconds) {
+                  has_collisions = true;
+                  console.log("COLLISION!!!");
+                  audioInputTrack++;
+                  break; // EXIt once there is collision
+              }
+          }
+        } while (has_collisions);
+        do {
+          has_collisions = false; // reset
+          // Get Video track from the sequence
+          const videoTrack = await mainSequence.getVideoTrack(videoInputTrack);
+          // Get track items
+          const videoTrackItems = await videoTrack.getTrackItems(
+              app.Constants.TrackItemType.CLIP,
+              false
+          );
+          console.log(`Video track ${videoInputTrack} has ${videoTrackItems.length} items`);
+          for (let trackItem of videoTrackItems) {
+              const itemStart = await trackItem.getStartTime();
+              const itemEnd = await trackItem.getEndTime();
+              if (time >= itemStart.seconds && time < itemEnd.seconds) {
+                  has_collisions = true;
+                  console.log("COLLISION!!!");
+                  videoInputTrack++;
+                  break; // EXIt once there is collision
+              }
+          }
+        } while (has_collisions);
+
+      // console.log(`final audio track: ${audioInputTrack}`);
+
+
+        
+        //Create & Execute the Insertion Action
         project.lockedAccess(() => {
             project.executeTransaction ((compoundAction) => {
-                actInsertProjItem = seqEditor.createInsertProjectItemAction(itemToInsert, insertionTime, videoInputTrack, audioInputTrack, onlyShiftInputTrack);
+                actInsertProjItem = seqEditor.createInsertProjectItemAction(itemToInsert, insertionTime, Number(videoInputTrack), Number(audioInputTrack), onlyShiftInputTrack);
                 //                                                           projectItem, time  ,VtrackIndex, AtrackIndex, limitshift
                 compoundAction.addAction(actInsertProjItem);
             })
@@ -118,8 +177,18 @@ async function getMarkers() {
   const markers = await sequenceMarkers.getMarkers();
   const videoInput = Number(document.getElementById("videoInput").value)
   const audioInput = Number(document.getElementById("audioInput").value)
+
   for(let marker of markers){
-    await insertItem(marker.getStart().seconds, marker.getName(), videoInput-1, audioInput-1);
+    if (await marker.getColorIndex() != 1){
+      await insertItem(marker.getStart().seconds, marker.getName(), videoInput-1, audioInput-1);
+      project.lockedAccess(() => {
+      // project.executeTransaction((compoundAction) => {
+      // const setColorAction = marker.createSetColorByIndexAction(1);
+      // compoundAction.addAction(setColorAction);
+      //   });
+      });
+    }
+
   }
 
   }
