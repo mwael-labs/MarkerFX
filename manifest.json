@@ -18,16 +18,16 @@
       "id": "starterpanel",
       "type": "panel",
       "minimumSize": {
-        "width": 430,
-        "height": 500
+        "width": 230,
+        "height": 200
       },
       "maximumSize": {
-        "width": 2000,
-        "height": 2000
+        "width": 1000,
+        "height": 1000
       },
       "preferredDockedSize": {
         "width": 230,
-        "height": 300
+        "height": 200
       },
       "preferredFloatingSize": {
         "width": 400,

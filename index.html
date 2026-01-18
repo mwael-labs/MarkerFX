@@ -5,23 +5,37 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- <h4 id="plugin-heading">MarkerFX</h4>
-    <div class="main-div">
-      <div id="plugin-body"> </div>
-    </div> -->
+
+    <button onclick="help()" id="help">?</button>
     <footer>
       <div id="field">
-        <label>videoTrackIndex</label><input type="number" id="videoInput" value="1"> 
-        <br>
-        <label>audioTrackIndex</label><input type="number" id="audioInput" value="1"> 
+        <label>videoTrackIndex: </label><input type="number" id="videoInput" value="1"> 
+        
+        <label>audioTrackIndex: </label><input type="number" id="audioInput" value="1"> 
       </div>
 
+      <dialog>
+      <sp-heading>👋 Thank you for using my plugin!</sp-heading>
+      
+      <sp-divider size="L"></sp-divider>
+      <sp-heading>QUICK GUIDE:</sp-heading>
+      <sp-body><sp-ol>
+        <li>Add markers named after media files (e.g. whoosh01.mp3) (right click the marker to edit its name)</li>
+        <li>Set target audio/video track index</li>
+        <li>Click "Apply!"</li>
+        <li>Markers turn red once processed. Red markers will not function unless you change their color</li>
+        <li>Do NOT place any files within folders (Sorry it is supported as of now)</li>
+        <li>You MUST add markers to the timeline, NOT the clip. You need to deselect the clip first then right click -> Add Marker</li>
+        <li>You can have more than one media files sharing the same name, a randomly selected one will be applied</li>
+      </sp-ol>
+      If there are any issues, or you want to suggest features, contact: <a href="contact.cl1ckmate@gmail.com">contact.cl1ckmate@gmail.com</a>
 
-      <!-- <button id="btnPopulate">Populate Application Info</button> -->
-      <!-- <button id="clear-btn">Clear Application Info</button> -->
-      <!-- <button id="my-btn" onclick="insertItem()">My button</button> -->
-      <button onclick="getMarkers()">GetMarkers</button>
-      <!-- <input id="input"> -->
+</sp-body>
+      </dialog>
+      <div id="div1">
+        <button id='buttonApply' onclick="getMarkers()">Apply!</button>
+      </div>
+
     </footer>
   </body>
 </html>
