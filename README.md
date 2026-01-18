@@ -47,7 +47,7 @@ Super lightweight UI (2 fields + 1 button)
 
 ## 📦 Installation
 
-- Download the latest release from Releases
+- Download the latest release from Releases (https://github.com/mwael-labs/MarkerFX/releases/tag/v1.0.0)
 - Double click and Install the plugin into Premiere Pro
 - Restart Premiere
 - Done!
