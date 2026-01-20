@@ -26,6 +26,44 @@ li:before {
   width: 100px;
 }
 
+#boxes-container{
+    /* border-width: 2px;
+    border-style: solid;
+    border-color: #a0a0a0; 
+    border-radius: 5px; */
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap; 
+    margin: 5px;
+}
+
+
+.color-box{ 
+    border-width: 2px;
+    border-style: solid;
+    border-color: #7a7a7a; 
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    margin: 3px;
+
+
+}
+
+#boxes-with-input {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #858585; 
+    border-radius: 5px;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap; 
+}
+
+#assign-input{
+  width: 100%;
+}
+
 #help{
   margin-bottom: 0;
   max-width: 18px;
@@ -41,7 +79,12 @@ label{
   font-size: 13px;
 }
 
-input{
+#videoInput{
+  max-width: 18px;
+  max-height: 18px;
+}
+
+#audioInput{
   max-width: 18px;
   max-height: 18px;
 }

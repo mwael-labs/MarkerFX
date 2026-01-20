@@ -102,8 +102,95 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
 }
 
 
+async function index2col(index, addOpacity = false) {
+    let color = ''
+    switch(index){
+        case 0:
+            color = '#718637'
+            break;
+        case 1:
+            color = '#802626'
+            break;
+        case 2:
+            color = '#AF8BB1'
+            break;
+        case 3:
+            color = '#E96F24'
+            break;
+        case 4:
+            color = '#D0A12B'
+            break;
+        case 5:
+            color = '#FFFFFF'
+            break;
+        case 6:
+            color = '#428DFC'
+            break;
+        case 7:
+            color = '#19F4D6'
+            break;
+    }
+    if (addOpacity){
+        return `${color}4d`
+    }
+    return color
+}
+
+async function set_colors_to_color_divs() {
+    for(let i=0; i<=7; i++){
+        const color_div = document.getElementById(`color-${i}`);
+        let color = ''
+        switch(i){
+            case 0:
+                color = '#718637'
+                break;
+            case 1:
+                color = '#802626'
+                break;
+            case 2:
+                color = '#AF8BB1'
+                break;
+            case 3:
+                color = '#E96F24'
+                break;
+            case 4:
+                color = '#D0A12B'
+                break;
+            case 5:
+                color = '#FFFFFF'
+                break;
+            case 6:
+                color = '#428DFC'
+                break;
+            case 7:
+                color = '#19F4D6'
+                break;
+        }
+        color_div.style.backgroundColor = color
+    }
+    
+    
+}
+
+async function assign_click_actions_to_color_divs() {
+    for(let i=0; i<=7; i++) {
+        const color_div = document.getElementById(`color-${i}`);
+        if (color_div) {
+            color_div.addEventListener("click", () => open_input(i));
+        }
+    }
+}
+
+const assignInput = document.getElementById("assign-input")
+const boxesWithInput = document.getElementById("boxes-with-input")
+
+async function open_input(color_index){
+    console.log(`U clicked ${color_index}`)
+    boxesWithInput.style.backgroundColor = await index2col(color_index, true)
+   
+}
+
 async function getMarkers() {
- 
   try{
   const project = await app.Project.getActiveProject();
   const mainSequence = await project.getActiveSequence();
@@ -141,3 +228,6 @@ async function help() {
     size: { width: 400, height: 300 },       
 });
 };  
+
+set_colors_to_color_divs()
+assign_click_actions_to_color_divs()
