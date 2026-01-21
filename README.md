@@ -81,8 +81,8 @@ If you have an idea, open an issue and let’s discuss it.
 
 ## 📄 License
 
-This project is free and open source.
-Use it, modify it, share it however you want.
+This project is free and open source,
+under the GPL license
 
 ## ❤️ Final note
 
