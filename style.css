@@ -27,10 +27,6 @@ li:before {
 }
 
 #boxes-container{
-    /* border-width: 2px;
-    border-style: solid;
-    border-color: #a0a0a0; 
-    border-radius: 5px; */
     align-items: center;
     display: flex;
     flex-wrap: wrap; 
@@ -43,12 +39,15 @@ li:before {
     border-style: solid;
     border-color: #7a7a7a; 
     border-radius: 5px;
-    width: 40px;
-    height: 40px;
+    width: 45%;
+    height: 30px;
     margin: 3px;
-
-
 }
+
+.color-labels {
+  background-color: rgba(0, 0, 0, 0.144);
+}
+
 
 #boxes-with-input {
     border-width: 2px;
@@ -66,6 +65,7 @@ li:before {
 
 #help{
   margin-bottom: 0;
+  
   max-width: 18px;
   max-height: 18px;
 }
@@ -90,6 +90,7 @@ label{
 }
 
 .field {
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;

@@ -18,16 +18,23 @@
       <sp-heading>👋 Thank you for using my plugin!</sp-heading>
       
       <sp-divider size="L"></sp-divider>
-      <sp-heading>QUICK GUIDE:</sp-heading>
-      <sp-body><sp-ol>
-        <li>Add markers named after media files (e.g. whoosh01.mp3) (right click the marker to edit its name)</li>
-        <li>Set target audio/video track index</li>
-        <li>Click "Apply!"</li>
-        <li>Markers turn red once processed. Red markers will not function unless you change their color</li>
-        <li>Do NOT place any files within folders (Sorry it is supported as of now)</li>
-        <li>You MUST add markers to the timeline, NOT the clip. You need to deselect the clip first then right click -> Add Marker</li>
-        <li>You can have more than one media files sharing the same name, a randomly selected one will be applied</li>
-      </sp-ol>
+<sp-heading>QUICK GUIDE</sp-heading>
+<sp-body>
+  <sp-ol>
+    <li>Select a <b>color slot</b> in the UI.</li>
+    <li>Enter the <b>media name</b> you want to place (e.g. <code>whoosh</code>, <code>boom</code>).</li>
+    <li>Add <b>timeline markers</b> using the same color you selected in the UI.</li>
+    <li>Click <b>Apply</b> → matching media is automatically added to the timeline.</li>
+    <li>You can assign <b>multiple media</b> to different color slots at the same time.</li>
+    <li>Processed markers turn <b>red</b>. Red markers are ignored unless you change their color.</li>
+    <li>If multiple files share the same name, one is <b>randomly selected</b> (adds variation).</li>
+    <li><b>Important:</b> Media files must not be inside folders (folder scanning not supported yet).</li>
+    <li><b>Important:</b> Markers must be added to the <b>timeline</b>, NOT a clip.<br/>
+        Deselect the clip first, then right-click the timeline → <b>Add Marker</b>.
+    </li>
+  </sp-ol>
+</sp-body>
+
       If there are any issues, or you want to suggest features, contact: <a href="contact.cl1ckmate@gmail.com">contact.cl1ckmate@gmail.com</a>
 
 </sp-body>
@@ -38,20 +45,28 @@
       <div id="boxes-with-input">
           <div id="boxes-container">
             <div class="color-box" id="color-0">
+              <label class='color-labels' id="color-label-0"></label>
             </div>
-            <div class="color-box" id="color-1">
+            <div class="color-box" id="color-1" style="display: none;">
+              <label class='color-labels' id="color-label-1"></label>
             </div>
             <div class="color-box" id="color-2">
+              <label class='color-labels' id="color-label-2"></label>
             </div>
             <div class="color-box" id="color-3">
+              <label class='color-labels' id="color-label-3"></label>
             </div>
             <div class="color-box" id="color-4">
+              <label class='color-labels' id="color-label-4"></label>
             </div>
             <div class="color-box" id="color-5">
+              <label class='color-labels' id="color-label-5"></label>
             </div>
             <div class="color-box" id="color-6">
+              <label class='color-labels' id="color-label-6"></label>
             </div>
             <div class="color-box" id="color-7">
+              <label class='color-labels' id="color-label-7"></label>
             </div>
           </div>
           

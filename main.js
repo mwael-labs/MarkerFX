@@ -15,7 +15,7 @@
 // Global object.
 const ppro = require("premierepro");
 const app = require("premierepro");
-
+  
 async function insertItem(time, item, videoInputTrack, audioInputTrack) {
     try {
         const project = await app.Project.getActiveProject();
@@ -53,13 +53,11 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
               app.Constants.TrackItemType.CLIP,
               false
           );
-          // console.log(`Audio track ${audioInputTrack} has ${audioTrackItems.length} items`);
           for (let trackItem of audioTrackItems) {
               const itemStart = await trackItem.getStartTime();
               const itemEnd = await trackItem.getEndTime();
               if (time >= itemStart.seconds && time < itemEnd.seconds) {
                   has_collisions = true;
-                  // console.log("COLLISION!!!");
                   audioInputTrack++;
                   break; // EXIT once there is collision
               }
@@ -181,14 +179,24 @@ async function assign_click_actions_to_color_divs() {
     }
 }
 
-const assignInput = document.getElementById("assign-input")
-const boxesWithInput = document.getElementById("boxes-with-input")
+const assignInput = document.getElementById("assign-input");
+const boxesWithInput = document.getElementById("boxes-with-input");
+
+let activeColorIndex = null;
 
 async function open_input(color_index){
-    console.log(`U clicked ${color_index}`)
-    boxesWithInput.style.backgroundColor = await index2col(color_index, true)
-   
+    console.log(`U clicked ${color_index}`);
+    activeColorIndex = color_index;
+    boxesWithInput.style.backgroundColor = await index2col(color_index, true);
 }
+
+assignInput.addEventListener("keydown", (event) => {
+    if (event.key === 'Enter' && activeColorIndex != null) {
+        const color_label =  document.getElementById(`color-label-${activeColorIndex}`);
+        color_label.textContent = assignInput.value;
+        assignInput.value = '';
+}
+});
 
 async function getMarkers() {
   try{
@@ -201,17 +209,15 @@ async function getMarkers() {
   const audioInput = Number(document.getElementById("audioInput").value)
 
   for(let marker of markers){
-    if (await marker.getColorIndex() != 1){
-      await insertItem(marker.getStart().seconds, marker.getName(), videoInput-1, audioInput-1);
-      project.lockedAccess(() => {
-        project.executeTransaction((compoundAction) => {
-        const setColorAction = marker.createSetColorByIndexAction(1);
-        compoundAction.addAction(setColorAction);
-      });
-      });
+    const i = await marker.getColorIndex()
+    await insertItem(marker.getStart().seconds, await document.getElementById(`color-label-${i}`).textContent, videoInput-1, audioInput-1);
+    project.lockedAccess(() => {
+    project.executeTransaction((compoundAction) => {
+    const setColorAction = marker.createSetColorByIndexAction(1);
+    compoundAction.addAction(setColorAction);
+    });
+    });
     }
-
-  }
 
   }
   catch(err){
