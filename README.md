@@ -1,3 +1,5 @@
+<img width="1676" height="681" alt="image" src="https://github.com/user-attachments/assets/416f60ff-991c-4bd6-a512-79b137c5d16e" />
+
 # MarkerFX
 
 MarkerFX is a marker-based media & SFX automation plugin for Adobe Premiere Pro.
