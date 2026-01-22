@@ -231,7 +231,7 @@ async function help() {
     dialog.uxpShowModal({                     
     title: "How to use the plugin!",           
     resize: "none",                         
-    size: { width: 400, height: 300 },       
+    size: { width: 600, height: 300 },       
 });
 };  
 
