@@ -4,57 +4,68 @@
 
 MarkerFX is a marker-based media & SFX automation plugin for Adobe Premiere Pro.
 
-Instead of dragging and stacking sound effects every time, you work with built-in timeline markers, and MarkerFX handles the rest.
+Instead of dragging, stacking, and fixing overlaps every time, you place timeline markers and let MarkerFX handle the rest.
 
-Built to be fast, lightweight, and free.
+Fast. Lightweight. Free. Open-source.
 
 ## Why MarkerFX?
 
 Adding SFX usually means:
 
-*Drag → drop → adjust → fix overlaps → repeat*
+Drag → drop → adjust → fix overlaps → repeat
 
-**MarkerFX** turns that into:
+### MarkerFX turns that into:
 
-*Add marker → click apply → done*
+Place marker → click Apply → done
 
-## ⚙️ How it works
+## How it works
 
-- Add markers on the timeline
-- Name them after the media you want `(e.g. whoosh01.mp3)`
-- Choose the audio and/or video track index
+Assign a marker color → media name in the UI
+
+Place timeline markers using that color
 
 Click Apply
 
-MarkerFX automatically:
+## 🧠 What MarkerFX does automatically
 
-- Adds the correct clip
-- Avoids overlaps by moving to the next free track
-- Marks completed markers in red
-- No manual stacking. No collisions.
+Inserts the correct media at marker positions
+Resolves track collisions by moving clips to the next free track
+Supports audio and video tracks
+Marks processed markers in red
+Optional random selection if multiple files share the same name
+No overlaps. No manual stacking.
 
 ## ✨ Features
 
-Marker-based workflow (native to Premiere)
-
+Native timeline marker workflow (not clip markers)
+Marker color-based automation (v1.1+)
 Automatic audio/video clip placement
+Smart collision handling
+Randomized clip selection for variation
+Used markers turn red for clarity
+Minimal, lightweight UI
 
-Smart collision handling (auto moves to next free track)
+## ⚠️ Important Notes
 
-Optional random clip selection if multiple files share the same name
+Markers must be placed on the timeline, not on clips
+(Deselect clips → Right click → Add Marker)
 
-Used markers turn red so you can track progress
+Media files must currently be in the root directory (no folders yet)
 
-Super lightweight UI (2 fields + 1 button)
+MarkerFX does not modify existing clips
 
-## 📦 Installation
+📦 Installation
 
-- Download the latest release from Releases (https://github.com/mwael-labs/MarkerFX/releases/tag/v1.0.0)
-- Double click and Install the plugin into Premiere Pro
-- Restart Premiere
-- Done!
+- Download the latest release from
+https://github.com/mwael-labs/MarkerFX/releases
 
-Detailed install steps may vary depending on OS / Premiere version.
+- Install the plugin from Adobe Creative Cloud
+
+- Restart Premiere Pro
+
+Done!
+
+(Exact steps may vary slightly depending on OS / Premiere version.)
 
 ## 🧩 Use cases
 
@@ -62,11 +73,11 @@ Detailed install steps may vary depending on OS / Premiere version.
 - Transitions
 - Repetitive editing workflows
 - Fast-paced YouTube / short-form editing
-- Anyone tired of dragging assets all day
+- Editors tired of dragging assets all day
 
 ## 🛠 Built with
 
-Adobe new UXP workspace, with Modern JavaScript, HTML and CSS.
+Adobe’s UXP framework using modern JavaScript, HTML, and CSS.
 
 ## 🤝 Contributing
 
@@ -83,12 +94,13 @@ If you have an idea, open an issue and let’s discuss it.
 
 ## 📄 License
 
-This project is free and open source,
-under the GPL license
+Free and open source
+Licensed under GPL
 
 ## ❤️ Final note
 
 MarkerFX was built to solve a real editing pain, not to be another paid tool.
-If it saves you time, I am glad so!
+
+If it saves you time, I am happy it did so!
 
 Happy editing ✂️✂️
