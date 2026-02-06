@@ -15,6 +15,58 @@
 // Global object.
 const ppro = require("premierepro");
 const app = require("premierepro");
+
+// Storage functions
+function saveColorSlots() {
+    try {
+        const colorSlots = {};
+        for (let i = 0; i <= 7; i++) {
+            const label = document.getElementById(`color-label-${i}`);
+            colorSlots[i] = label.textContent || '';
+        }
+        localStorage.setItem('markerFX_colorSlots', JSON.stringify(colorSlots));
+        console.log('Color slots saved:', colorSlots);
+    } catch (err) {
+        console.error('Failed to save color slots:', err);
+    }
+}
+
+function loadColorSlots() {
+    try {
+        const data = localStorage.getItem('markerFX_colorSlots');
+        if (data) {
+            const colorSlots = JSON.parse(data);
+            console.log('Color slots loaded:', colorSlots);
+            
+            // Restore labels
+            for (let i = 0; i <= 7; i++) {
+                const label = document.getElementById(`color-label-${i}`);
+                if (label && colorSlots[i]) {
+                    label.textContent = colorSlots[i];
+                }
+            }
+            return colorSlots;
+        }
+    } catch (err) {
+        console.error('Failed to load color slots:', err);
+    }
+    return {};
+}
+
+function clearColorSlots() {
+    try {
+        localStorage.removeItem('markerFX_colorSlots');
+        for (let i = 0; i <= 7; i++) {
+            const label = document.getElementById(`color-label-${i}`);
+            if (label) {
+                label.textContent = '';
+            }
+        }
+        console.log('Color slots cleared');
+    } catch (err) {
+        console.error('Failed to clear color slots:', err);
+    }
+}
   
 async function insertItem(time, item, videoInputTrack, audioInputTrack) {
     try {
@@ -30,7 +82,6 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
         const insertionTime = await app.TickTime.createWithSeconds(Number(time));
         const onlyShiftInputTrack = true; // False = split & shift ALL tracks at insertion point
         var itemToInsert;
-
 
         // Specify item to insert
         let availableItems = []
@@ -63,6 +114,7 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
               }
           }
         } while (has_collisions);
+        
         do {
           has_collisions = false; // reset
           // Get Video track from the sequence
@@ -72,13 +124,11 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
               app.Constants.TrackItemType.CLIP,
               false
           );
-          // console.log(`Video track ${videoInputTrack} has ${videoTrackItems.length} items`);
           for (let trackItem of videoTrackItems) {
               const itemStart = await trackItem.getStartTime();
               const itemEnd = await trackItem.getEndTime();
               if (time >= itemStart.seconds && time < itemEnd.seconds) {
                   has_collisions = true;
-                  // console.log("COLLISION!!!");
                   videoInputTrack++;
                   break; // EXIT once there is collision
               }
@@ -89,7 +139,6 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
         project.lockedAccess(() => {
             project.executeTransaction ((compoundAction) => {
                 actInsertProjItem = seqEditor.createInsertProjectItemAction(itemToInsert, insertionTime, Number(videoInputTrack), Number(audioInputTrack), onlyShiftInputTrack);
-                //                                                           projectItem, time  ,VtrackIndex, AtrackIndex, limitshift
                 compoundAction.addAction(actInsertProjItem);
             })
         });
@@ -98,7 +147,6 @@ async function insertItem(time, item, videoInputTrack, audioInputTrack) {
         console.error(err);
     }
 }
-
 
 async function index2col(index, addOpacity = false) {
     let color = ''
@@ -166,8 +214,6 @@ async function set_colors_to_color_divs() {
         }
         color_div.style.backgroundColor = color
     }
-    
-    
 }
 
 async function assign_click_actions_to_color_divs() {
@@ -188,14 +234,25 @@ async function open_input(color_index){
     console.log(`U clicked ${color_index}`);
     activeColorIndex = color_index;
     boxesWithInput.style.backgroundColor = await index2col(color_index, true);
+    
+    // Pre-fill input with existing value
+    const currentLabel = document.getElementById(`color-label-${color_index}`);
+    assignInput.value = currentLabel.textContent || '';
+    assignInput.focus();
 }
 
 assignInput.addEventListener("keydown", (event) => {
     if (event.key === 'Enter' && activeColorIndex != null) {
-        const color_label =  document.getElementById(`color-label-${activeColorIndex}`);
+        const color_label = document.getElementById(`color-label-${activeColorIndex}`);
         color_label.textContent = assignInput.value;
         assignInput.value = '';
-}
+        
+        // Save to localStorage
+        saveColorSlots();
+        
+        activeColorIndex = null;
+        boxesWithInput.style.backgroundColor = '';
+    }
 });
 
 async function getMarkers() {
@@ -210,14 +267,22 @@ async function getMarkers() {
 
   for(let marker of markers){
     const i = await marker.getColorIndex()
-    await insertItem(marker.getStart().seconds, await document.getElementById(`color-label-${i}`).textContent, videoInput-1, audioInput-1);
-    project.lockedAccess(() => {
-    project.executeTransaction((compoundAction) => {
-    const setColorAction = marker.createSetColorByIndexAction(1);
-    compoundAction.addAction(setColorAction);
-    });
-    });
+    const mediaName = document.getElementById(`color-label-${i}`).textContent;
+    
+    // Skip if no media assigned to this color
+    if (!mediaName || mediaName.trim() === '') {
+        console.log(`no media assigned to color ${i}`);
+        continue;
     }
+    
+    await insertItem(marker.getStart().seconds, mediaName, videoInput-1, audioInput-1);
+    project.lockedAccess(() => {
+      project.executeTransaction((compoundAction) => {
+        const setColorAction = marker.createSetColorByIndexAction(1);
+        compoundAction.addAction(setColorAction);
+      });
+    });
+  }
 
   }
   catch(err){
@@ -225,15 +290,25 @@ async function getMarkers() {
   }
 }
 
-
 async function help() {
     const dialog = document.querySelector("dialog");
     dialog.uxpShowModal({                     
-    title: "How to use the plugin!",           
-    resize: "none",                         
-    size: { width: 600, height: 300 },       
-});
-};  
+        title: "How to use the plugin!",           
+        resize: "none",                         
+        size: { width: 600, height: 300 },       
+    });
+}
 
-set_colors_to_color_divs()
-assign_click_actions_to_color_divs()
+function copyToClipboard(text) {
+    const clipboard = require("uxp").clipboard;
+    clipboard.writeText(text).then(() => {
+        console.log("Copied to clipboard: " + text);
+        alert("Copied to clipboard!");
+    }).catch(err => {
+        console.error("Failed to copy: " + err);
+    });
+}
+
+set_colors_to_color_divs();
+assign_click_actions_to_color_divs();
+loadColorSlots();
